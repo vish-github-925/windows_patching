@@ -1,0 +1,43 @@
+---
+  - name: Check CPU utilization
+    win_shell: wmic cpu get loadpercentage | Select -Last 4 # The output will be a number. Example: 16
+    register: cpu_utilization
+
+  - name: Check disk space
+    win_shell: Get-WmiObject Win32_LogicalDisk -Filter "DeviceID='C:'" | Select -ExpandProperty Freespace
+    register: disk_space #The output will be a large number. Example 60388986880
+
+  - name: List of running services
+    win_shell: Get-Process | select-object ProcessName #The output will be a list of processess running
+    register: process
+
+  - debug:
+      msg: "{{ process.stdout_lines }}"
+
+  - debug:
+      msg: "{{ cpu_utilization.stdout_lines[0] | int }}"
+
+  - set_fact:
+      disk_free_space: "{{ disk_space.stdout_lines[0] | int/1024/1024/1024 }} "
+
+  - debug:
+      msg: "{{ disk_free_space }}"
+    when: disk_free_space|int > 10
+
+  - name: Check if Patches are available or Not
+    ansible.windows.win_updates:
+         category_names: SecurityUpdates
+         state: searched
+         log_path: C:\ansible_win_updates_list_output.txt
+    register: available_updates
+
+    # - name: Add output 
+    # copy:
+            # content: "Hostname: {{inventory_hostname}},CPU Utilisation: {{cpu_utilization.stdout_lines[0] | int }},Disk free space: {{disk_free_space}}, List of  processess: {{process.stdout_lines | map('trim') | list}}"
+            # dest: C:\Temp\pre_patch.txt
+
+  - name: lineinfile module
+    win_lineinfile:
+            line: "Hostname: {{inventory_hostname}},CPU Utilisation: {{cpu_utilization.stdout_lines[0] | int }},Disk free space: {{disk_free_space}}, List of  processess: {{process.stdout_lines | map('trim') | list}}"
+            dest: C:\Temp\pre_patch_lineinfile.txt
+            insertbefore: EOF 

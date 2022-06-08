@@ -1,0 +1,11 @@
+---
+- name: Ping linux and windows 
+  hosts: all
+  tasks:
+          - name: windows ping
+            win_ping:
+            when: inventory_hostname in groups['windows']
+
+          - name: linux ping
+            ping:
+            when: inventory_hostname in groups['linux']
