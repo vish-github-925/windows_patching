@@ -11,7 +11,7 @@
      host: smpt.gmail.com
      port: 587
      username: vishnuvardhanuppunuthula@gmail.com
-     password: GooglePass@925
+     password: 
      to: Sarika <sarikamarathe25@gmail.com> 
      subject: Pre-patch is going to start
      body: '''Hello team!!
@@ -19,16 +19,10 @@
 
      Thanks and regards,
      '''
-     #from: vishuvardhanuppunuthula@gmail.com 
-     #to: Sarika <sarikamarathe25@gmail.com>
-     #cc: Vishnuvardhan <vishnuvardhanuppunuthula@gmail.com>
-
-                                                                                     # attach: /etc/group /tmp/pavatar2.png
-                                                          #           headers: 'Reply-To=john@example.com|X-Special="Something or other"'
-                                                          #charset: utf8
+     charset: utf8
     delegate_to: localhost
-                                                                                                                                              #
-                                                                                                      #
+                                                                                                                                              
+                                                                                                      
   - name: Create a file to capture all pre-patch output
     ansible.windows.win_file:
            path: C:\Temp\pre_patch.txt
@@ -36,23 +30,3 @@
 
   - include_tasks: pre_patch.yaml
            
-    #  - name: Send mail Pre patch activity report to team
-                                                                                                                                              #                                                           mail:
-                                                                                                                                              #                                                                     host: 127.0.0.1
-                                                                                                                                              #                                                                               port: 2025
-                                                                                                                                              #                                                                                         subject: Windows patching pre-patch report
-                                                                                                                                              #                                                                                                   body: '''Hello team,
-                                                                                                                                              #                                                                                                             
-                                                                                                                                              #                                                                                                                       Please find the attachment and review the pre-patch activity report
-                                                                                                                                              #                                                                                                                                 
-                                                                                                                                              #                                                                                                                                           Thanks and regards
-                                                                                                                                              #                                                                                                                                                     
-                                                                                                                                              #                                                                                                                                                               '''
-                                                                                                                                              #                                                                                                                                                                         from: jane@example.net (Jane Jolie)
-                                                                                                                                              #                                                                                                                                                                                   to: John Doe <j.d@example.org>, Suzie Something <sue@example.com>
-                                                                                                                                              #                                                                                                                                                                                             cc: Charlie Root <root@localhost>
-                                                                                                                                              #                                                                                                                                                                                                       attach:  C:\Temp\pre_patch.txt
-                                                                                                                                              #                                                                                                                                                                                                                 headers: 'Reply-To=john@example.com|X-Special="Something or other"'
-                                                                                                                                              #                                                                                                                                                                                                                           charset: utf8
-                                                                                                                                              #                                                                                                                                                                                                                                 delegate_to: localhost
-                                                                                                                                              #                                                                                                                                                                                                                                      
