@@ -18,26 +18,44 @@
       msg: "{{ cpu_utilization.stdout_lines[0] | int }}"
 
   - set_fact:
-      disk_free_space: "{{ disk_space.stdout_lines[0] | int/1024/1024/1024 }} "
+      disk_free_space: "{{ disk_space.stdout_lines[0] | int/1024/1024/1024 }}"
+
+  - set_fact:
+      process_list_count: "{{process.stdout_lines | map('trim') | list | unique | count}}"
 
   - debug:
       msg: "{{ disk_free_space }}"
     when: disk_free_space|int > 10
 
   - name: Check if Patches are available or Not
-    ansible.windows.win_updates:
+    win_updates:
          category_names: SecurityUpdates
          state: searched
-         log_path: C:\ansible_win_updates_list_output.txt
-    register: available_updates
+         log_path: C:\Temp\{{inventory_hostname}}_{{date_time}}_win_updates_list_output.txt
 
-    # - name: Add output 
-    # copy:
-            # content: "Hostname: {{inventory_hostname}},CPU Utilisation: {{cpu_utilization.stdout_lines[0] | int }},Disk free space: {{disk_free_space}}, List of  processess: {{process.stdout_lines | map('trim') | list}}"
-            # dest: C:\Temp\pre_patch.txt
+  - name: Fetch windows update file into the loalhost
+    fetch:
+     src: C:\Temp\{{inventory_hostname}}_{{date_time}}_win_updates_list_output.txt
+     dest: /tmp/ansible_dir/win_updates_files/
+     flat: yes 
+
+  - name: check pre-patch log file exists
+    stat:
+     path: /tmp/ansible_dir/pre-patch-output-files/{{date_time}}_pre-patch.txt
+    register: pre_patch_log
+    delegate_to: localhost
+
+  - name: Create pre-patch log file if doesn't exist
+    file:
+     path: /tmp/ansible_dir/pre-patch-output-files/{{date_time}}_pre-patch.txt
+     state: touch
+    check_mode: yes
+    when: not pre_patch_log.stat.exists
+    delegate_to: localhost
 
   - name: lineinfile module
-    win_lineinfile:
-            line: "Hostname: {{inventory_hostname}},CPU Utilisation: {{cpu_utilization.stdout_lines[0] | int }},Disk free space: {{disk_free_space}}, List of  processess: {{process.stdout_lines | map('trim') | list}}"
-            dest: C:\Temp\pre_patch_lineinfile.txt
+    lineinfile:
+            line: "Hostname: {{inventory_hostname}},CPU Utilisation: {{cpu_utilization.stdout_lines[0] | int }},Disk free space: {{disk_free_space}}, Count of  processess: {{process_list_count }}"
+            dest: /tmp/ansible_dir/pre-patch-output-files/{{date_time}}_pre-patch.txt
             insertbefore: EOF 
+    delegate_to: localhost

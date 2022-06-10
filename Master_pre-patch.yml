@@ -4,29 +4,8 @@
   gather_facts: true
   ignore_errors: true
 
-  tasks:
-        
-  - name: Send pre patch activity starting mail
-    mail:
-     host: smpt.gmail.com
-     port: 587
-     username: vishnuvardhanuppunuthula@gmail.com
-     password: 
-     to: Sarika <sarikamarathe25@gmail.com> 
-     subject: Pre-patch is going to start
-     body: '''Hello team!!
-     Pre-patch of windows servers is going to start!!
-
-     Thanks and regards,
-     '''
-     charset: utf8
-    delegate_to: localhost
-                                                                                                                                              
-                                                                                                      
-  - name: Create a file to capture all pre-patch output
-    ansible.windows.win_file:
-           path: C:\Temp\pre_patch.txt
-           state: touch
-
+  tasks:       
+  - set_fact:
+      date_time: "{{ ansible_date_time.date}}_{{ansible_date_time.hour}}H-{{ansible_date_time.minute}}M-{{ansible_date_time.second}}S"                                                                                     
   - include_tasks: pre_patch.yaml
            

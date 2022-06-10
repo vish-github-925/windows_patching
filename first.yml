@@ -2,10 +2,17 @@
 - name: Ping linux and windows 
   hosts: all
   tasks:
-          - name: windows ping
-            win_ping:
-            when: inventory_hostname in groups['windows']
 
-          - name: linux ping
-            ping:
-            when: inventory_hostname in groups['linux']
+  - name: Check file exists
+    stat:
+      path: /var/lib/awx/projects/windows-patching/first.yml
+    register: result
+    delegate_to: localhost
+
+  - debug: 
+       msg: "File exists"
+    when: result.stat.exists
+
+  - debug:
+      msg: "File not exist"
+    when: not result.stat.exists
