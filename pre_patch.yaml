@@ -36,7 +36,7 @@
   - name: Fetch windows update file into the loalhost
     fetch:
      src: C:\Temp\{{inventory_hostname}}_{{date_time}}_win_updates_list_output.txt
-     dest: /tmp/ansible_dir/win_updates_files/
+     dest: /tmp/ansible_dir/win_updates_files/{{date_time}}/
      flat: yes 
 
   - name: check pre-patch log file exists

@@ -9,6 +9,14 @@
      set_fact:
       date_time: "{{ ansible_date_time.date}}_{{ansible_date_time.hour}}H-{{ansible_date_time.minute}}M-{{ansible_date_time.second}}S"   
     run_once: true
+    delegate_to: localhost
+
+  - name: Creating directory to store windows updates log files in localhost
+    file:
+     path: /tmp/ansible_dir/win_updates_files/{{date_time}}
+     state: directory
+    run_once: true
+    delegate_to: localhost
 
   - name: Send pre-patch starting mail to team 
     mail:
