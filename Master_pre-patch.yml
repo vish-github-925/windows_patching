@@ -4,8 +4,36 @@
   gather_facts: true
   ignore_errors: true
 
-  tasks:       
-  - set_fact:
-      date_time: "{{ ansible_date_time.date}}_{{ansible_date_time.hour}}H-{{ansible_date_time.minute}}M-{{ansible_date_time.second}}S"                                                                                     
+  pre_tasks:       
+  - name:
+     set_fact:
+      date_time: "{{ ansible_date_time.date}}_{{ansible_date_time.hour}}H-{{ansible_date_time.minute}}M-{{ansible_date_time.second}}S"   
+    run_once: true
+
+  - name: Send pre-patch starting mail to team 
+    mail:
+     host: localhost 
+     port: 25
+     to: Vishnuvardhan <vishnu@example.com>
+     cc: Sarika Marathe <sarika@example.com>
+     subject: Pre-Patch is starting
+     body: Hello Team!  Pre-patch is starting
+    run_once: true
+    delegate_to: localhost
+
+  tasks:
   - include_tasks: pre_patch.yaml
-           
+
+
+  post_tasks:  
+  - name: Send pre-patch report to team
+    mail:
+      host: localhost
+      port: 25
+      to: Vishnuvardhan <vishnu@example.com>
+      cc: Sarika Marathe <sarika@example.com>
+      subject: Pre-patch report
+      body: Hi team! Please find the attached pre-patch report
+      attach: /tmp/ansible_dir/{{date_time}}_pre-patch.txt
+    run_once: true
+    delegate_to: localhost
