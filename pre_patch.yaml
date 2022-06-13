@@ -15,7 +15,7 @@
      process_list_count: "{{process.stdout_lines | map('trim') | list | unique | count}}"
   
   - debug:
-          msg: "The list of processes:  {{ process.stdout_lines | map('trim) | list | unique }} and the count of processes is: {{process_list_count }}"
+          msg: "The list of processes:  {{ process.stdout_lines | map('trim') | list | unique }} and the count of processes is: {{process_list_count }}"
 
   - debug:
           msg: "CPU Utilization: {{ cpu_utilization.stdout_lines[0] | int }}"
@@ -35,26 +35,31 @@
   - name: Fetch windows update file into the loalhost
     fetch:
      src: C:\Temp\{{inventory_hostname}}_{{date_time}}_win_updates_list_output.txt
-     dest: /tmp/ansible_dir/win_updates_files/{{date_time}}/
+     dest: /ansible_dir/win_updates_files/{{date_time}}/
      flat: yes 
 
   - name: check pre-patch log file exists
     stat:
-     path: /tmp/ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.txt
+     path: "/ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.txt"
+    run_once: true
     register: pre_patch_log
     delegate_to: localhost
 
+  - debug:
+     msg: "{{pre_patch_log}}"
+
   - name: Create pre-patch log file if doesn't exist
     file:
-     path: /tmp/ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.txt
+     path: "/ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.txt"
      state: touch
-    check_mode: yes
-    when: not pre_patch_log.stat.exists
+    become: yes
+    run_once: true
+    when: pre_patch_log.stat.exists == false
     delegate_to: localhost
 
   - name: lineinfile module
     lineinfile:
             line: "Hostname: {{inventory_hostname}},CPU Utilisation: {{cpu_utilization.stdout_lines[0] | int }},Disk free space: {{disk_free_space}}, Count of  processess: {{process_list_count }}"
-            dest: /tmp/ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.txt
+            dest: /ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.txt
             insertbefore: EOF 
     delegate_to: localhost

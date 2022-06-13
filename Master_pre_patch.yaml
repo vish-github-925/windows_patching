@@ -12,7 +12,7 @@
 
     - name: Creating directory to store windows updates log files in localhost
       file:
-        path: /tmp/ansible_dir/win_updates_files/{{date_time}}
+        path: /ansible_dir/win_updates_files/{{date_time}}
         state: directory
       run_once: true
       delegate_to: localhost
