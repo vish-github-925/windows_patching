@@ -1,5 +1,5 @@
 ---
-- name: Master Pre Patch Activities
+- name: Master Post Patch Activities
   hosts: windows
   gather_facts: true
   ignore_errors: true
@@ -11,12 +11,12 @@
     run_once: true
     delegate_to: localhost
 
-  - name: Creating directory to store windows updates log files in localhost
-    file:
-     path: /tmp/ansible_dir/win_updates_files/{{date_time}}
-     state: directory
-    run_once: true
-    delegate_to: localhost
+    #- name: Creating directory to store windows updates log files in localhost
+    #file:
+            #path: /tmp/ansible_dir/win_updates_files/{{date_time}}
+     #state: directory
+     #run_once: true
+    #delegate_to: localhost
 
   - name: Send pre-patch starting mail to team 
     mail:
@@ -24,24 +24,24 @@
      port: 25
      to: Vishnuvardhan <vishnu@example.com>
      cc: Sarika Marathe <sarika@example.com>
-     subject: Pre-Patch is starting
-     body: Hello Team!  Pre-patch is starting
+     subject: Post-Patch is starting
+     body: Hello Team!  Post-patch is starting
     run_once: true
     delegate_to: localhost
 
   tasks:
-  - include_tasks: pre_patch.yaml
+  - include_tasks: post_patch.yaml
 
 
   post_tasks:  
-  - name: Send pre-patch report to team
+  - name: Send post-patch report to team
     mail:
       host: localhost
       port: 25
       to: Vishnuvardhan <vishnu@example.com>
       cc: Sarika Marathe <sarika@example.com>
-      subject: Pre-patch report
-      body: Hi team! Please find the attached pre-patch report
-      attach: /tmp/ansible_dir/{{date_time}}_pre-patch.txt
+      subject: Post-patch report
+      body: Hi team! Please find the attached post-patch report
+      attach: /tmp/ansible_dir/post_patch_output_files/{{date_time}}_post_patch.txt
     run_once: true
     delegate_to: localhost

@@ -11,21 +11,20 @@
     win_shell: Get-Process | select-object ProcessName #The output will be a list of processess running
     register: process
 
+  - set_fact:
+     process_list_count: "{{process.stdout_lines | map('trim') | list | unique | count}}"
+  
   - debug:
-      msg: "{{ process.stdout_lines }}"
+          msg: "The list of processes:  {{ process.stdout_lines | map('trim) | list | unique }} and the count of processes is: {{process_list_count }}"
 
   - debug:
-      msg: "{{ cpu_utilization.stdout_lines[0] | int }}"
+          msg: "CPU Utilization: {{ cpu_utilization.stdout_lines[0] | int }}"
 
   - set_fact:
       disk_free_space: "{{ disk_space.stdout_lines[0] | int/1024/1024/1024 }}"
 
-  - set_fact:
-      process_list_count: "{{process.stdout_lines | map('trim') | list | unique | count}}"
-
   - debug:
-      msg: "{{ disk_free_space }}"
-    when: disk_free_space|int > 10
+          msg: "The disk free space is: {{ disk_free_space }}"
 
   - name: Check if Patches are available or Not
     win_updates:
@@ -41,13 +40,13 @@
 
   - name: check pre-patch log file exists
     stat:
-     path: /tmp/ansible_dir/pre-patch-output-files/{{date_time}}_pre-patch.txt
+     path: /tmp/ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.txt
     register: pre_patch_log
     delegate_to: localhost
 
   - name: Create pre-patch log file if doesn't exist
     file:
-     path: /tmp/ansible_dir/pre-patch-output-files/{{date_time}}_pre-patch.txt
+     path: /tmp/ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.txt
      state: touch
     check_mode: yes
     when: not pre_patch_log.stat.exists
@@ -56,6 +55,6 @@
   - name: lineinfile module
     lineinfile:
             line: "Hostname: {{inventory_hostname}},CPU Utilisation: {{cpu_utilization.stdout_lines[0] | int }},Disk free space: {{disk_free_space}}, Count of  processess: {{process_list_count }}"
-            dest: /tmp/ansible_dir/pre-patch-output-files/{{date_time}}_pre-patch.txt
+            dest: /tmp/ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.txt
             insertbefore: EOF 
     delegate_to: localhost

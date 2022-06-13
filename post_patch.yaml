@@ -1,0 +1,57 @@
+---
+  - name: Install windows updates for service stack update
+    win_updates:
+     category_names: "{{ patching_windows_categories }}"
+
+  - name: Start ntp service for workgroup servers
+    service:
+     name: ntp
+     state: restarted
+    when: inventory_hostname in groups['workgroup_servers']
+
+  - name: Check CPU utilization
+    win_shell: wmic cpu get loadpercentage | Select -Last 4 # The output will be a number. Example: 16
+    register: cpu_utilization
+
+  - debug:
+      msg: " CPU Utilization: {{ cpu_utilization.stdout_lines[0] | int }}"
+
+  - name: Check disk space
+    win_shell: Get-WmiObject Win32_LogicalDisk -Filter "DeviceID='C:'" | Select -ExpandProperty Freespace
+    register: disk_space #The output will be a large number. Example 60388986880
+
+  - set_fact:
+     disk_free_space: "{{ disk_space.stdout_lines[0] | int/1024/1024/1024 }}"
+ 
+  - debug:
+     msg: "The disk free space: {{disk_free_space}}"
+
+  - name: List of running services
+    win_shell: Get-Process | select-object ProcessName #The output will be a list of processess running
+    register: process
+
+  - set_fact:
+      process_list_count: "{{process.stdout_lines | map('trim') | list | unique | count}}"
+
+  - debug:
+     msg: "The list of processes are: {{ process.stdout_lines | map('trim') | list | unique }} and the count of processes is: {{ process_list_count }}"
+
+  - name: Check if post-patch log exists
+    stat:
+     path: /tmp/ansible_dir/post-patch-output-files/{{date_time}}_post_patch.txt
+    register: post_patch_log
+
+  - name: Create post-patch log file if doesn't exist
+    file:
+     path: /tmp/ansible_dir/post-patch-output-files/{{date_time}}_post-patch.txt
+     state: touch
+    check_mode: yes
+    when: not post_patch_log.stat.exists
+    delegate_to: localhost
+
+  - name: lineinfile module
+    lineinfile:
+            line: "Hostname: {{inventory_hostname}},CPU Utilisation: {{cpu_utilization.stdout_lines[0] | int }},Disk free space: {{disk_free_space}}, Count of  processess: {{process_list_count }}"
+            dest: /tmp/ansible_dir/post-patch-output-files/{{date_time}}_post-patch.txt
+            insertbefore: EOF 
+    delegate_to: localhost
