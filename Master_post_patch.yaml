@@ -5,8 +5,7 @@
   ignore_errors: true
 
   pre_tasks:       
-  - name:
-     set_fact:
+  - set_fact:
       date_time: "{{ ansible_date_time.date}}_{{ansible_date_time.hour}}H-{{ansible_date_time.minute}}M-{{ansible_date_time.second}}S"   
     run_once: true
     delegate_to: localhost
