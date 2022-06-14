@@ -39,12 +39,18 @@
      flat: yes 
 
   - name: Python script to extract available patches
-    shell: python3.8 win-updates.py /ansible_dir/win_updates_files/{{date_time}}/{{inventory_hostname}}_{{date_time}}_win_updates_list_output.txt
+    shell: python3.8 /ansible_dir/playbooks/win-updates.py /ansible_dir/win_updates_files/{{date_time}}/{{inventory_hostname}}_{{date_time}}_win_updates_list_output.txt
     register: available_patches
     delegate_to: localhost
 
+  - set_fact:
+      available_patches_count: "{{available_patches.stdout_lines | list | count }}"
+
+  - set_fact:
+      available_patches_list: "{{available_patches.stdout_lines | list }}"
+
   - debug:
-      msg: "{{avilable_patches.stdout_lines}}"
+      msg: "{{available_patches.stdout_lines}}"
 
   - name: check pre-patch log file exists
     stat:
@@ -67,7 +73,7 @@
 
   - name: lineinfile module
     lineinfile:
-            line: "Hostname: {{inventory_hostname}},CPU Utilisation: {{cpu_utilization.stdout_lines[0] | int }},Disk free space: {{disk_free_space}}, Count of  processess: {{process_list_count }}"
+            line: "Hostname: {{inventory_hostname}},CPU Utilization: {{cpu_utilization.stdout_lines[0] | int }}% ,Disk free space: {{disk_free_space}}, Count of  processess: {{process_list_count }}, Number of patches available: {{available_patches_count}}, List of available patches: {{available_patches_list}}"
             dest: /ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.txt
             insertbefore: EOF 
     delegate_to: localhost
