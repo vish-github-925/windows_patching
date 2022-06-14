@@ -1,6 +1,7 @@
 import json
+import sys
 object_started = False
-with open("win-updates-searched.txt") as file:
+with open(sys.argv[1]) as file:
     objects = []
     for line in file.readlines():
         if line.startswith("{"):
