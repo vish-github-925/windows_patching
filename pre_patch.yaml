@@ -38,6 +38,14 @@
      dest: /ansible_dir/win_updates_files/{{date_time}}/
      flat: yes 
 
+  - name: Python script to extract available patches
+    shell: python3.8 win-updates.py /ansible_dir/win_updates_files/{{date_time}}/{{inventory_hostname}}_{{date_time}}_win_updates_list_output.txt
+    register: available_patches
+    delegate_to: localhost
+
+  - debug:
+      msg: "{{avilable_patches.stdout_lines}}"
+
   - name: check pre-patch log file exists
     stat:
      path: "/ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.txt"

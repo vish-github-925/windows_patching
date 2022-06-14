@@ -1,0 +1,30 @@
+---
+- hosts: all
+  tasks:
+  - name: Ps check patches availability
+    win_shell: (get-windowsupdate | select kb).count
+    register: ps_win_patches
+  
+  - set_fact:
+       available_win_patches: 0
+    when: ps_win_patches.stdout == ''
+
+  - set_fact:
+       available_win_patches: "{{ ps_win_pacthes.stdout | int }}"
+    when: ps_win_patches.stdout != ''
+
+  - set_fact:
+       available_win_patches: 5
+
+  - debug:
+     msg: "PS available win patches: {{ ps_win_patches.stdout }}"
+
+  - name: Get list of kb 
+    win_shell: get-windowsupdate | select kb
+    register: win_patches
+    when: available_win_patches > 0
+
+  - debug:
+      msg: "The win patches are: {{ win_patches.stdout_lines | list | reject('match', '^$') }}"
+    when: available_win_patches > 0
+
