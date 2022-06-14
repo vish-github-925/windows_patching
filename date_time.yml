@@ -1,0 +1,17 @@
+---
+- hosts: all
+  gather_facts: false
+  ignore_errors: true
+  #ignore_unreachable: true
+  tasks:
+  - set_fact:
+          date_time: "{{'%HH:%MM:%SS' | strftime }}"
+    delegate_to: localhost
+  - debug:
+          msg: "the date time is: {{date_time}}"
+  - debug:
+          msg: "All hosts {{ansible_play_hosts_all}}"
+  - debug:
+          msg: "reachable hosts: {{ansible_play_hosts}}"
+  - debug: 
+          msg: "unreachable hosts: {{ansible_play_hosts_all | difference(ansible_play_hosts) }} "

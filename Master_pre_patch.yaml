@@ -6,7 +6,7 @@
 
   pre_tasks:
     - set_fact:
-        date_time: "{{ ansible_date_time.date}}_{{ansible_date_time.hour}}H-{{ansible_date_time.minute}}M-{{ansible_date_time.second}}S"
+        date_time: "{{'%Y-%m-%d_%HH-%MM-%SS' | strftime }}"
       run_once: true
       delegate_to: localhost
 
@@ -32,6 +32,28 @@
     - include_tasks: pre_patch.yaml
 
   post_tasks:
+  - name: check pre-patch log file exists
+    stat:
+      path: "/ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.txt"
+      run_once: true
+    register: pre_patch_log
+    delegate_to: localhost 
+
+  - name: Create pre-patch log file if doesn't exist
+    file:
+           path: "/ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.txt"
+           state: touch
+    become: yes
+    run_once: true  
+    when: pre_patch_log.stat.exists == false
+    delegate_to: localhost
+
+  - name: lineinfile module 
+    lineinfile:  
+     line: "Unreachable hosts: {{ansible_play_hosts_all | difference(ansible_play_hosts) }}"
+     dest: /ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.txt 
+     insertbefore: EOF
+    delegate_to: localhost     
   # - name: Send pre-patch report to team
   #   mail:
   #     host: localhost
