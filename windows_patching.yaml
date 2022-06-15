@@ -1,0 +1,74 @@
+---
+- name: windows patching
+  hosts: all
+  gather_facts: true
+
+  vars:
+    patching_windows_reboot: true
+    patching_windows_reboot_timeout: 3600
+    patching_windows_categories:
+      - "CriticalUpdates"
+      - "SecurityUpdates"
+      - "Updates"
+      - "Application"
+      - "Connector"
+      - "DefinitionUpdates"
+      - "DeveloperKits"
+      - "FeaturePacks"
+      - "Guidance"
+      - "ServicePacks"
+      - "Tools"
+      - "UpdateRoolups"
+
+  tasks:
+    - name: Install Windows Updates
+      win_updates:
+        category_names: "{{ patching_windows_categories }}"
+        reboot: "{{ 'yes' if patchijng_windows_rebppt else 'no' }}"
+        reboot_timeout: "{{ patching_windows_reboot_timeout }}"
+      #   log_path: C:\ansible_wu.txt                    # if register variable doesnt work
+      register: win_updates_result
+      #failed_when: not patching_windows_reboot and win_updates_result.failed is defined and win_updates_result.failed and cpu_utilization.stdout_lines[0]|int > 50 and disk_free_space| int < 10
+
+    - name: Reboot and retry
+      when: patching_windows_reboot and win_updates_result.msg is defined and win_updates_result.msg == "A reboot is required before more updates can be installed"
+
+      block:
+        - name: Reboot windows to retry update installation
+          win_reboot:
+            reboot_timeout: "{{ patching_windows_reboot_timeout }}"
+          when: inventory_hostname in groups['reboot_server_group']
+
+        - name: Power off servers
+            win_shell: shutdown /s
+          when: inventory_hostname in groups['power_off_server_group']
+    
+    - name: check patching log file exists
+      stat:
+        path: "/ansible_dir/patching_output_files/{{date_time}}_windows_patch.txt"
+      run_once: true
+      register: patching_log
+      delegate_to: localhost
+
+    - debug:
+       msg: "{{patching_log}}"
+
+    - name: Create patching log file if doesn't exist
+      file:
+        path: "/ansible_dir/patching_output_files/{{date_time}}_windows_patch.txt"
+        state: touch
+      become: yes
+      run_once: true
+      when: patching_log.stat.exists == false
+      delegate_to: localhost
+
+    - name: lineinfile module
+      lineinfile:
+            line: "Hostname: {{inventory_hostname}} , \n **************OUTPUT ***************** \n {{ win_updates_result.stdout_lines }}"
+            dest: /ansible_dir/patching_output_files/{{date_time}}_windows_patch.txt
+            insertbefore: EOF 
+      delegate_to: localhost
+        
+    
+
+        

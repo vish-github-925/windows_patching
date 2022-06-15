@@ -1,8 +1,10 @@
 ---
+  # check if server is reachable or not
+
   - name: Install windows updates for service stack update
     win_updates:
      category_names: "{{ patching_windows_categories }}"
-
+  
   - name: Start ntp service for workgroup servers
     service:
      name: ntp
@@ -46,7 +48,7 @@
      path: /ansible_dir/post_patch_output_files/{{date_time}}_post_patch.txt
      state: touch
     become: yes
-    when: not post_patch_log.stat.exists
+    when: post_patch_log.stat.exists == false
     delegate_to: localhost
 
   - name: lineinfile module
