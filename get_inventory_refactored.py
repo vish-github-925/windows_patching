@@ -2,7 +2,7 @@ import pandas as pd
 import sys
 
 day_sheet = sys.argv[1]
-sheet = pd.read_excel("dummy_data.xlsx", day_sheet)
+sheet = pd.read_excel("C:\\Users\\user\\Desktop\\oneNeuron\\python_lecture\\python_excel_test\\dummy_data.xlsx", day_sheet)
 
 critical_servers_ini = "[critical_servers]\n"
 non_critical_servers_ini = "[non_critical_servers]\n"
@@ -32,7 +32,7 @@ ansible_shell_type=cmd
 '''
 
 total_ini_file = initial_items_ini + "\n" + critical_servers_ini + "\n" + non_critical_servers_ini + "\n" + reboot_servers_ini + "\n" + power_off_servers_ini + "\n" + workgroup_servers_ini + "\n"
-with open(f"{day_sheet}_inventory.ini", "w", encoding="utf-8") as file:
+with open(f"C:\\Users\\user\\Desktop\\oneNeuron\\python_lecture\\python_excel_test\\github_windows_patching_scripts\\{day_sheet}_inventory.ini", "w", encoding="utf-8") as file:
     file.write(total_ini_file+"\n")
     # file.write(critical_servers_ini+"\n")
     # file.write(non_critical_servers_ini+"\n")
