@@ -1,0 +1,14 @@
+---
+- hosts: all
+  tasks:
+    - name: Execute the python script to prepare inventory file from excel sheets.
+      win_shell: python C:\Users\user\Desktop\oneNeuron\PythonLecture\python_excel_test\get_inventory_refactored.py {{ day }}
+    - name:
+      fetch:
+        src: C:\Users\user\Desktop\oneNeuron\PythonLecture\python_excel_test\Day1_inventory.ini
+        dest: /ansible_dir/inventory/
+        flat: yes
+
+  # The above playbook is executed
+  # a) In the terminal by ansible-playbook ansible_inventory.yaml -e "day_of_patching='Day1'"
+  # b) In the ansible tower by giving day_of_patching in extra variables section and also enabling prompt on launch option, so for every execution it prompts for a value to be given
