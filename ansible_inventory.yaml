@@ -2,10 +2,11 @@
 - hosts: all
   tasks:
     - name: Execute the python script to prepare inventory file from excel sheets.
-      win_shell: python C:\Users\user\Desktop\oneNeuron\PythonLecture\python_excel_test\get_inventory_refactored.py {{ day }}
+      win_command: python C:\Users\user\Desktop\oneNeuron\python_lecture\python_excel_test\github_windows_patching_scripts\get_inventory_refactored.py {{day}}
+
     - name:
       fetch:
-        src: C:\Users\user\Desktop\oneNeuron\PythonLecture\python_excel_test\Day1_inventory.ini
+        src: C:\Users\user\Desktop\oneNeuron\python_lecture\python_excel_test\github_windows_patching_scripts\{{day}}_inventory.ini
         dest: /ansible_dir/inventory/
         flat: yes
 
