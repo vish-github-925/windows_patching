@@ -1,0 +1,18 @@
+---
+- hosts: all
+  tasks:
+  - name: get available patches
+    shell: python /ansible_dir/playbooks/win-updates.py win_patches_output.txt
+    register: available_patches
+
+  - debug:
+      msg: "available patches: {{ available_patches }}"
+
+  - set_fact:
+          available_patches_list: "{{available_patches | list }}"
+  - set_fact:
+          available_patches_count: "{{ available_patches_list | count }} "
+
+  - debug:
+      msg: "available patches list: {{available_patches_list}}, count: {{available_patches_count}}" 
+

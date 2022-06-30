@@ -42,12 +42,14 @@
     shell: python3.8 /ansible_dir/playbooks/win-updates.py /ansible_dir/win_updates_files/{{date_time}}/{{inventory_hostname}}_{{date_time}}_win_updates_list_output.txt
     register: available_patches
     delegate_to: localhost
+  - debug:
+          msg: "The available patches are: {{available_patches}}"
 
   - set_fact:
-      available_patches_count: "{{available_patches.stdout_lines | list | count }}"
+      available_patches_count: "{{available_patches.stdout_lines | list |  count }}"
 
   - set_fact:
-      available_patches_list: "{{available_patches.stdout_lines | list }}"
+      available_patches_list: "{{available_patches.stdout_lines | list}}"
 
   - debug:
       msg: "{{available_patches.stdout_lines}}"

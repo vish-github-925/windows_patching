@@ -1,6 +1,6 @@
 ---
 - name: Master Pre Patch Activities
-  hosts: windows
+  hosts: all
   gather_facts: true
   ignore_errors: true
 
