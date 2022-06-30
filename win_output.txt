@@ -1,0 +1,341 @@
+2022-06-13 12:00:28Z Reboot requirement check: False
+2022-06-13 12:00:28Z Creating Windows Update session...
+2022-06-13 12:00:28Z Create Windows Update searcher...
+2022-06-13 12:00:28Z Setting the Windows Update Agent source catalog...
+2022-06-13 12:00:28Z Search source set to 'default' (ServerSelection = 0)
+2022-06-13 12:00:28Z Searching for updates to install with query 'IsInstalled = 0'
+2022-06-13 12:00:47Z Found 11 updates
+2022-06-13 12:00:47Z Filtering found updated based on input search criteria
+2022-06-13 12:00:47Z Process filtering rules for
+{
+    "id":  "a023aa22-bc89-446c-9839-ce665038d0d5",
+    "title":  "2022-05 Cumulative Update Preview for .NET Framework 3.5 and 4.8 for Windows 10 Version 21H1 for x64 (KB5013887)",
+    "description":  "Install this update to resolve issues in Windows. For a complete listing of the issues that are included in this update, see the associated Microsoft Knowledge Base article for more information. After you install this item, you may have to restart your computer.",
+    "kb":  [
+               "KB5013887"
+           ],
+    "type":  "Software",
+    "deployment_action":  "Installation",
+    "auto_select_on_websites":  false,
+    "browse_only":  false,
+    "revision_number":  204,
+    "categories":  [
+                       "Updates",
+                       "Windows 10, version 1903 and later"
+                   ],
+    "is_installed":  false,
+    "is_hidden":  false,
+    "is_present":  false,
+    "reboot_required":  false,
+    "impact":  "Normal",
+    "reboot_behaviour":  "CanRequestReboot",
+    "is_beta":  false,
+    "is_downloaded":  false,
+    "is_mandatory":  false,
+    "is_uninstallable":  false,
+    "auto_selection":  "AutoSelectIfDownloaded",
+    "auto_download":  "AlwaysAutoDownload"
+}
+2022-06-13 12:00:47Z Skipping update a023aa22-bc89-446c-9839-ce665038d0d5 - 2022-05 Cumulative Update Preview for .NET Framework 3.5 and 4.8 for Windows 10 Version 21H1 for x64 (KB5013887) due to category_names
+2022-06-13 12:00:47Z Process filtering rules for
+{
+    "id":  "6af73e18-1337-443c-9373-16d32bafd3de",
+    "title":  "Security Intelligence Update for Microsoft Defender Antivirus - KB2267602 (Version 1.367.1484.0)",
+    "description":  "Install this update to revise the files that are used to detect viruses, spyware, and other potentially unwanted software. Once you have installed this item, it cannot be removed.",
+    "kb":  [
+               "KB2267602"
+           ],
+    "type":  "Software",
+    "deployment_action":  "Installation",
+    "auto_select_on_websites":  true,
+    "browse_only":  false,
+    "revision_number":  200,
+    "categories":  [
+                       "Definition Updates",
+                       "Microsoft Defender Antivirus"
+                   ],
+    "is_installed":  false,
+    "is_hidden":  false,
+    "is_present":  true,
+    "reboot_required":  false,
+    "impact":  "Minor",
+    "reboot_behaviour":  "NeverReboots",
+    "is_beta":  false,
+    "is_downloaded":  false,
+    "is_mandatory":  false,
+    "is_uninstallable":  false,
+    "auto_selection":  "LetWindowsUpdateDecide",
+    "auto_download":  "LetWindowsUpdateDecide"
+}
+2022-06-13 12:00:47Z Skipping update 6af73e18-1337-443c-9373-16d32bafd3de - Security Intelligence Update for Microsoft Defender Antivirus - KB2267602 (Version 1.367.1484.0) due to category_names
+2022-06-13 12:00:47Z Process filtering rules for
+{
+    "id":  "3c574c67-8ae0-4fad-9301-79e763e69177",
+    "title":  "ELAN HID Device - HIDClass - 9/28/2017 12:00:00 AM - 15.4.5.2",
+    "description":  "ELAN HID Device HIDClass  driver update released in  September 2017",
+    "kb":  [
+
+           ],
+    "type":  "Driver",
+    "deployment_action":  "Unknown 4",
+    "auto_select_on_websites":  false,
+    "browse_only":  false,
+    "revision_number":  1,
+    "categories":  [
+                       "Drivers"
+                   ],
+    "is_installed":  false,
+    "is_hidden":  false,
+    "is_present":  false,
+    "reboot_required":  false,
+    "impact":  "Normal",
+    "reboot_behaviour":  "CanRequestReboot",
+    "is_beta":  false,
+    "is_downloaded":  false,
+    "is_mandatory":  false,
+    "is_uninstallable":  false,
+    "auto_selection":  "AutoSelectIfDownloaded",
+    "auto_download":  "AlwaysAutoDownload"
+}
+2022-06-13 12:00:47Z Skipping update 3c574c67-8ae0-4fad-9301-79e763e69177 - ELAN HID Device - HIDClass - 9/28/2017 12:00:00 AM - 15.4.5.2 due to category_names
+2022-06-13 12:00:47Z Process filtering rules for
+{
+    "id":  "034cda53-f24c-4ac6-ae9a-5ad019d87e15",
+    "title":  "ELAN - Mouse - 10/19/2017 12:00:00 AM - 19.4.7.3",
+    "description":  "ELAN Mouse  driver update released in  October 2017",
+    "kb":  [
+
+           ],
+    "type":  "Driver",
+    "deployment_action":  "Unknown 4",
+    "auto_select_on_websites":  false,
+    "browse_only":  false,
+    "revision_number":  1,
+    "categories":  [
+                       "Drivers"
+                   ],
+    "is_installed":  false,
+    "is_hidden":  false,
+    "is_present":  false,
+    "reboot_required":  false,
+    "impact":  "Normal",
+    "reboot_behaviour":  "CanRequestReboot",
+    "is_beta":  false,
+    "is_downloaded":  false,
+    "is_mandatory":  false,
+    "is_uninstallable":  false,
+    "auto_selection":  "AutoSelectIfDownloaded",
+    "auto_download":  "AlwaysAutoDownload"
+}
+2022-06-13 12:00:47Z Skipping update 034cda53-f24c-4ac6-ae9a-5ad019d87e15 - ELAN - Mouse - 10/19/2017 12:00:00 AM - 19.4.7.3 due to category_names
+2022-06-13 12:00:47Z Process filtering rules for
+{
+    "id":  "bc81df75-02dc-499a-948a-e1084f6141e2",
+    "title":  "Qualcomm Atheros Communications - Bluetooth - 7/23/2018 12:00:00 AM - 10.0.0.720",
+    "description":  "Qualcomm Atheros Communications Bluetooth  driver update released in  July 2018",
+    "kb":  [
+
+           ],
+    "type":  "Driver",
+    "deployment_action":  "Unknown 4",
+    "auto_select_on_websites":  false,
+    "browse_only":  false,
+    "revision_number":  1,
+    "categories":  [
+                       "Drivers"
+                   ],
+    "is_installed":  false,
+    "is_hidden":  false,
+    "is_present":  false,
+    "reboot_required":  false,
+    "impact":  "Normal",
+    "reboot_behaviour":  "CanRequestReboot",
+    "is_beta":  false,
+    "is_downloaded":  false,
+    "is_mandatory":  false,
+    "is_uninstallable":  false,
+    "auto_selection":  "AutoSelectIfDownloaded",
+    "auto_download":  "AlwaysAutoDownload"
+}
+2022-06-13 12:00:47Z Skipping update bc81df75-02dc-499a-948a-e1084f6141e2 - Qualcomm Atheros Communications - Bluetooth - 7/23/2018 12:00:00 AM - 10.0.0.720 due to category_names
+2022-06-13 12:00:47Z Process filtering rules for
+{
+    "id":  "356e5895-36c8-4901-a144-5ecf91a1dc3f",
+    "title":  "Lenovo Ltd. - Firmware - 10/31/2017 12:00:00 AM - 1.36.0.0",
+    "description":  "Lenovo Ltd. Firmware  driver update released in  October 2017",
+    "kb":  [
+
+           ],
+    "type":  "Driver",
+    "deployment_action":  "Unknown 4",
+    "auto_select_on_websites":  false,
+    "browse_only":  false,
+    "revision_number":  2,
+    "categories":  [
+                       "Drivers"
+                   ],
+    "is_installed":  false,
+    "is_hidden":  false,
+    "is_present":  false,
+    "reboot_required":  false,
+    "impact":  "Normal",
+    "reboot_behaviour":  "CanRequestReboot",
+    "is_beta":  false,
+    "is_downloaded":  false,
+    "is_mandatory":  false,
+    "is_uninstallable":  false,
+    "auto_selection":  "AutoSelectIfDownloaded",
+    "auto_download":  "AlwaysAutoDownload"
+}
+2022-06-13 12:00:47Z Skipping update 356e5895-36c8-4901-a144-5ecf91a1dc3f - Lenovo Ltd. - Firmware - 10/31/2017 12:00:00 AM - 1.36.0.0 due to category_names
+2022-06-13 12:00:47Z Process filtering rules for
+{
+    "id":  "8cd4fe5c-acc2-4a07-8510-f7244fc9d74b",
+    "title":  "NVIDIA - Display - 12/11/2018 12:00:00 AM - 25.21.14.1735",
+    "description":  "NVIDIA Display  driver update released in  December 2018",
+    "kb":  [
+
+           ],
+    "type":  "Driver",
+    "deployment_action":  "Unknown 4",
+    "auto_select_on_websites":  false,
+    "browse_only":  false,
+    "revision_number":  1,
+    "categories":  [
+                       "Drivers"
+                   ],
+    "is_installed":  false,
+    "is_hidden":  false,
+    "is_present":  false,
+    "reboot_required":  false,
+    "impact":  "Normal",
+    "reboot_behaviour":  "CanRequestReboot",
+    "is_beta":  false,
+    "is_downloaded":  false,
+    "is_mandatory":  false,
+    "is_uninstallable":  false,
+    "auto_selection":  "AutoSelectIfDownloaded",
+    "auto_download":  "AlwaysAutoDownload"
+}
+2022-06-13 12:00:47Z Skipping update 8cd4fe5c-acc2-4a07-8510-f7244fc9d74b - NVIDIA - Display - 12/11/2018 12:00:00 AM - 25.21.14.1735 due to category_names
+2022-06-13 12:00:47Z Process filtering rules for
+{
+    "id":  "7bc97f68-5096-4d5d-8ed7-be42bcc82ef3",
+    "title":  "Intel - System - 10/3/2017 12:00:00 AM - 11.7.0.1045",
+    "description":  "Intel System  driver update released in  October 2017",
+    "kb":  [
+
+           ],
+    "type":  "Driver",
+    "deployment_action":  "Unknown 4",
+    "auto_select_on_websites":  false,
+    "browse_only":  false,
+    "revision_number":  4,
+    "categories":  [
+                       "Drivers"
+                   ],
+    "is_installed":  false,
+    "is_hidden":  false,
+    "is_present":  false,
+    "reboot_required":  false,
+    "impact":  "Normal",
+    "reboot_behaviour":  "CanRequestReboot",
+    "is_beta":  false,
+    "is_downloaded":  false,
+    "is_mandatory":  false,
+    "is_uninstallable":  false,
+    "auto_selection":  "AutoSelectIfDownloaded",
+    "auto_download":  "AlwaysAutoDownload"
+}
+2022-06-13 12:00:47Z Skipping update 7bc97f68-5096-4d5d-8ed7-be42bcc82ef3 - Intel - System - 10/3/2017 12:00:00 AM - 11.7.0.1045 due to category_names
+2022-06-13 12:00:47Z Process filtering rules for
+{
+    "id":  "dac82a19-f9ba-459d-a30a-f56d4b326faa",
+    "title":  "Intel - System - 9/19/2017 12:00:00 AM - 11.7.0.1000",
+    "description":  "Intel System  driver update released in  September 2017",
+    "kb":  [
+
+           ],
+    "type":  "Driver",
+    "deployment_action":  "Unknown 4",
+    "auto_select_on_websites":  false,
+    "browse_only":  false,
+    "revision_number":  3,
+    "categories":  [
+                       "Drivers"
+                   ],
+    "is_installed":  false,
+    "is_hidden":  false,
+    "is_present":  false,
+    "reboot_required":  false,
+    "impact":  "Normal",
+    "reboot_behaviour":  "CanRequestReboot",
+    "is_beta":  false,
+    "is_downloaded":  false,
+    "is_mandatory":  false,
+    "is_uninstallable":  false,
+    "auto_selection":  "AutoSelectIfDownloaded",
+    "auto_download":  "AlwaysAutoDownload"
+}
+2022-06-13 12:00:47Z Skipping update dac82a19-f9ba-459d-a30a-f56d4b326faa - Intel - System - 9/19/2017 12:00:00 AM - 11.7.0.1000 due to category_names
+2022-06-13 12:00:47Z Process filtering rules for
+{
+    "id":  "f4bc394b-3a74-4c60-9664-efc0d3bc8888",
+    "title":  "Intel Corporation - Display - 5/23/2019 12:00:00 AM - 26.20.100.6859",
+    "description":  "Intel Corporation Display  driver update released in  May 2019",
+    "kb":  [
+
+           ],
+    "type":  "Driver",
+    "deployment_action":  "Unknown 4",
+    "auto_select_on_websites":  false,
+    "browse_only":  false,
+    "revision_number":  1,
+    "categories":  [
+                       "Drivers"
+                   ],
+    "is_installed":  false,
+    "is_hidden":  false,
+    "is_present":  false,
+    "reboot_required":  false,
+    "impact":  "Normal",
+    "reboot_behaviour":  "CanRequestReboot",
+    "is_beta":  false,
+    "is_downloaded":  false,
+    "is_mandatory":  false,
+    "is_uninstallable":  false,
+    "auto_selection":  "AutoSelectIfDownloaded",
+    "auto_download":  "AlwaysAutoDownload"
+}
+2022-06-13 12:00:47Z Skipping update f4bc394b-3a74-4c60-9664-efc0d3bc8888 - Intel Corporation - Display - 5/23/2019 12:00:00 AM - 26.20.100.6859 due to category_names
+2022-06-13 12:00:47Z Process filtering rules for
+{
+    "id":  "301a3539-0aba-44bb-99c5-31f440c0ff45",
+    "title":  "Intel Corporation - HDC - 17.8.1.1066",
+    "description":  "Intel Corporation HDC  driver update released in  December 2019",
+    "kb":  [
+
+           ],
+    "type":  "Driver",
+    "deployment_action":  "Unknown 4",
+    "auto_select_on_websites":  false,
+    "browse_only":  false,
+    "revision_number":  1,
+    "categories":  [
+                       "Drivers"
+                   ],
+    "is_installed":  false,
+    "is_hidden":  false,
+    "is_present":  false,
+    "reboot_required":  false,
+    "impact":  "Normal",
+    "reboot_behaviour":  "CanRequestReboot",
+    "is_beta":  false,
+    "is_downloaded":  false,
+    "is_mandatory":  false,
+    "is_uninstallable":  false,
+    "auto_selection":  "AutoSelectIfDownloaded",
+    "auto_download":  "AlwaysAutoDownload"
+}
+2022-06-13 12:00:47Z Skipping update 301a3539-0aba-44bb-99c5-31f440c0ff45 - Intel Corporation - HDC - 17.8.1.1066 due to category_names
+2022-06-13 12:00:47Z Search mode: exiting...
