@@ -1,16 +1,10 @@
 import pandas as pd
 import sys
 
-day_sheet = sys.argv[1]
+day_sheet = "Day1"
 sheet = pd.read_excel("C:\\Users\\user\\Desktop\\oneNeuron\\python_lecture\\python_excel_test\\dummy_data.xlsx", day_sheet)
 
-critical_servers_ini = "[critical_servers]\n"
-non_critical_servers_ini = "[non_critical_servers]\n"
-reboot_servers_ini = "[reboot_servers]\n"
-power_off_servers_ini = "[power_off_servers]\n"
-workgroup_servers_ini = "[workgroup_servers]\n"
-azure_servers_ini = "[azure_servers]\n"
-vmware_servers_ini = "[vmware_servers]\n"
+
 
 for i in sheet.index:
     ip_address = sheet['ip address'][i]
