@@ -1,0 +1,26 @@
+---
+- hosts: all
+  tasks: 
+  - name: Get the services list
+    win_shell: Get-service | Where Status -eq Running | foreach {$_.DisplayName}
+    register: services
+  
+  - set_fact:
+          services_l: "{{ services.stdout_lines | map('trim') | unique | list }}"
+  - set_fact: 
+      services_c: "{{ services_l | count }}"
+  - debug:
+          msg: "The services are: {{ services_l }} -------------------------  and the count is: {{ services_c }} "
+
+
+  - name: Get process
+    win_shell: Get-Process | foreach {$_.Processname}
+    register: process
+      
+  - set_fact:
+          process_l: "{{ process.stdout_lines | map('trim') | unique | list }}"
+  - set_fact: 
+      process_c: "{{ process_l | count }}"
+  - debug:  
+     msg: "The services are: {{ process_l }} -------------------------  and the count is: {{ process_c }} "
+

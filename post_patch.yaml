@@ -1,14 +1,12 @@
 ---
   # check if server is reachable or not
 
-  - name: Install windows updates for service stack update
-    win_updates:
-     category_names: "{{ patching_windows_categories }}"
+ # - name: Install windows updates for service stack update
+ #   win_updates:
+ #   category_names: "{{ patching_windows_categories }}"
   
   - name: Start ntp service for workgroup servers
-    service:
-     name: ntp
-     state: restarted
+    win_shell: Restart-Service W32Time
     when: inventory_hostname in groups['workgroup_servers']
 
   - name: Check CPU utilization
@@ -28,32 +26,111 @@
   - debug:
      msg: "The disk free space: {{disk_free_space}}"
 
-  - name: List of running services
-    win_shell: Get-Process | select-object ProcessName #The output will be a list of processess running
+  - name: List of processes running
+    win_shell: Get-Process | foreach {$_.ProcessName} #The output will be a list of processess running
     register: process
-
+ 
   - set_fact:
       process_list_count: "{{process.stdout_lines | map('trim') | list | unique | count}}"
 
   - debug:
      msg: "The list of processes are: {{ process.stdout_lines | map('trim') | list | unique }} and the count of processes is: {{ process_list_count }}"
 
+
+  - name: List of services running
+    win_shell: Get-Service | Where-Object {$_.Status -eq "Running"} | foreach {$_.DisplayName}
+    register: services
+
+  - set_fact:
+          services_list: "{{services.stdout_lines | map('trim') | list | unique }}"
+  - set_fact:
+          services_str: "{{ services_list | join(' | ') | string}}"
+  - set_fact:
+          services_list_count: "{{services_list | count }}"
+  - debug:
+          msg: "The services are {{services_str}} and the count is {{services_list_count}}"
+  - name: Create postpatch services output file
+    file:
+       path: "/ansible_dir/services_output/{{inventory_hostname}}_services_post_patch.txt"
+       state: touch
+    delegate_to: localhost
+  - name: Write postpatch services to services output file  
+    shell: echo "{{services_list}}" > /ansible_dir/services_output/{{inventory_hostname}}_services_post_patch.txt
+    delegate_to: localhost
+  - set_fact:       
+      services_list_count: "{{services_list | count }}"
+  - name: Python script to check services
+    shell: "python3.8 /ansible_dir/playbooks/process_services.py /ansible_dir/services_output/{{inventory_hostname}}_services_pre_patch.txt /ansible_dir/services_output/{{inventory_hostname}}_services_post_patch.txt"
+    register: diff_services
+    delegate_to: localhost
+
+  - debug:
+          msg: "Missed services in pre_patch : {{diff_services.stdout_lines[0]}}, Missed services in post_patch: {{diff_services.stdout_lines[1]}}"
+  - set_fact:
+          count_of_services_during_pre_patch: "{{ diff_services.stdout_lines[0] }}"
+  - set_fact:
+          missed_services_in_pre_patch: "{{ diff_services.stdout_lines[1] }}"
+  - set_fact:
+          missed_services_in_post_patch: "{{ diff_services.stdout_lines[2] }}"
+  - set_fact: 
+      missed_services_in_pre_patch_str: "{{ missed_services_in_pre_patch | join(' | ') | string}}"
+  - set_fact:
+      missed_services_in_post_patch_str: "{{ missed_services_in_post_patch | join(' | ') | string}}"
+
+  - name: Check if Patches are available or Not
+    win_updates:
+       category_names: SecurityUpdates
+       state: searched
+       log_path: C:\Temp\{{inventory_hostname}}_{{date_time}}_win_updates_list_output.txt
+
+  - name: Fetch windows update file into the loalhost
+    fetch: 
+      src: C:\Temp\{{inventory_hostname}}_{{date_time}}_win_updates_list_output.txt
+      dest: /ansible_dir/win_updates_files/{{date_time}}/
+      flat: yes
+
+  - name: Python script to extract available patches
+    shell: python /ansible_dir/playbooks/win-updates.py /ansible_dir/win_updates_files/{{date_time}}/{{inventory_hostname}}_{{date_time}}_win_updates_list_output.txt
+    register: available_patches
+    delegate_to: localhost
+
+  - set_fact:
+       available_patches_count: "{{available_patches.stdout_lines[1]}}"  
+
+  - set_fact:
+       available_patches_list: "{{available_patches.stdout_lines[0]}}" 
+
+  - debug: 
+      msg: "{{available_patches.stdout_lines}}"   
+
   - name: Check if post-patch log exists
     stat:
-     path: /ansible_dir/post_patch_output_files/{{date_time}}_post_patch.txt
+     path: /ansible_dir/post_patch_output_files/{{date_time}}_post_patch.csv
     register: post_patch_log
+    delegate_to: localhost
+
+  - debug:
+          msg: "{{post_patch_log}}"
 
   - name: Create post-patch log file if doesn't exist
     file:
-     path: /ansible_dir/post_patch_output_files/{{date_time}}_post_patch.txt
+     path: /ansible_dir/post_patch_output_files/{{date_time}}_post_patch.csv
      state: touch
     become: yes
     when: post_patch_log.stat.exists == false
     delegate_to: localhost
 
+  - name: Creating headers for post patch output file
+    lineinfile:
+            line: "IP Address,Reachable/Un-reachable,CPU Utilization,Free disk space,Count of Processes,Count of available_patches,List of available patches,List of Services,Count of services(post_patch),Count of services(pre_patch),Missed services during pre_patch,Missed services during post_patch"
+            dest: /ansible_dir/post_patch_output_files/{{date_time}}_post_patch.csv
+            insertbefore: EOF
+    run_once: true
+    delegate_to: localhost
+
   - name: lineinfile module
     lineinfile:
-            line: "Hostname: {{inventory_hostname}},CPU Utilisation: {{cpu_utilization.stdout_lines[0] | int }},Disk free space: {{disk_free_space}}, Count of  processess: {{process_list_count }}"
-            dest: /ansible_dir/post-patch-output-files/{{date_time}}_post_patch.txt
+            line: "{{inventory_hostname}},Reachable,{{cpu_utilization.stdout_lines[0] | int }}%,{{disk_free_space }},{{process_list_count }},{{available_patches_count}},{{available_patches_list}},{{services_str}},{{services_list_count}},{{count_of_services_during_pre_patch}},{{missed_services_in_pre_patch_str}},{{missed_services_in_post_patch_str}}"
+            dest: /ansible_dir/post_patch_output_files/{{date_time}}_post_patch.csv
             insertbefore: EOF 
     delegate_to: localhost

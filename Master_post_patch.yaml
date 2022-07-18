@@ -1,8 +1,13 @@
 ---
 - name: Master Post Patch Activities
-  hosts: windows
+  hosts: all
   gather_facts: true
   ignore_errors: true
+  
+  vars:
+          patching_windows_reboot_timeout: 3600
+          patching_windows_categories:
+                  - "SecurityUpdates"
 
   pre_tasks:
     - set_fact:
@@ -10,14 +15,21 @@
       run_once: true
       delegate_to: localhost
 
-  # - name: Send post-patch starting mail to team
+    - name: Creating directory to store windows updates log files in localhost
+      file:
+        path: /ansible_dir/win_updates_files/{{date_time}}
+        state: directory
+      run_once: true
+      delegate_to: localhost
+
+  # - name: Send pre-patch starting mail to team
   #   mail:
   #    host: localhost
   #    port: 25
   #    to: Vishnuvardhan <vishnu@example.com>
   #    cc: Sarika Marathe <sarika@example.com>
-  #    subject: Post-Patch is starting
-  #    body: Hello Team!  Post-patch is starting
+  #    subject: Pre-Patch is starting
+  #    body: Hello Team!  Pre-patch is starting
   #   run_once: true
   #   delegate_to: localhost
 
@@ -25,14 +37,42 @@
     - include_tasks: post_patch.yaml
 
   post_tasks:
-  # - name: Send post-patch report to team
+  - name: check post-patch log file exists
+    stat:
+      path: "/ansible_dir/post_patch_output_files/{{date_time}}_post_patch.csv"
+      run_once: true
+    register: post_patch_log
+    delegate_to: localhost 
+
+  - name: Create post-patch log file if doesn't exist
+    file:
+           path: "/ansible_dir/post_patch_output_files/{{date_time}}_post_patch.csv"
+           state: touch
+    become: yes
+    run_once: true  
+    when: post_patch_log.stat.exists == false
+    delegate_to: localhost
+  
+  - set_fact:
+      unreachable_hosts: "{{ansible_play_hosts_all | difference(ansible_play_hosts) }}"
+    run_once: true
+
+  - name: lineinfile module 
+    lineinfile:  
+     line: "{{item}},Un-reachable,-,-,-,-,-,-"
+     dest: /ansible_dir/post_patch_output_files/{{date_time}}_post_patch.csv
+     insertbefore: EOF
+    loop: "{{ unreachable_hosts }}"
+    run_once: true
+    delegate_to: localhost     
+  # - name: Send pre-patch report to team
   #   mail:
   #     host: localhost
   #     port: 25
   #     to: Vishnuvardhan <vishnu@example.com>
   #     cc: Sarika Marathe <sarika@example.com>
-  #     subject: Post-patch report
-  #     body: Hi team! Please find the attached post-patch report
-  #     attach: /tmp/ansible_dir/post_patch_output_files/{{date_time}}_post_patch.txt
+  #     subject: Pre-patch report
+  #     body: Hi team! Please find the attached pre-patch report
+  #     attach: /tmp/ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.txt
   #   run_once: true
   #   delegate_to: localhost

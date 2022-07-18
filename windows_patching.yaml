@@ -1,73 +1,62 @@
 ---
-- name: windows patching
-  hosts: all
-  gather_facts: true
+    - name: Get the hostname:
+      win_shell: hostname
+      register: hostname_output
 
-  vars:
-    patching_windows_reboot: true
-    patching_windows_reboot_timeout: 3600
-    patching_windows_categories:
-      - "CriticalUpdates"
-      - "SecurityUpdates"
-      - "Updates"
-      - "Application"
-      - "Connector"
-      - "DefinitionUpdates"
-      - "DeveloperKits"
-      - "FeaturePacks"
-      - "Guidance"
-      - "ServicePacks"
-      - "Tools"
-      - "UpdateRoolups"
+    - set_fact:
+            host: "{{ hostname_result.stdout_lines[0] }}"
+    - debug:
+            msg: "The hostname of {{inventory_hostname} is : {{host}}"
 
-  tasks:
     - name: Install Windows Updates
       win_updates:
         category_names: "{{ patching_windows_categories }}"
-        reboot: "{{ 'yes' if patchijng_windows_rebppt else 'no' }}"
-        reboot_timeout: "{{ patching_windows_reboot_timeout }}"
-      #   log_path: C:\ansible_wu.txt                    # if register variable doesnt work
       register: win_updates_result
-      #failed_when: not patching_windows_reboot and win_updates_result.failed is defined and win_updates_result.failed and cpu_utilization.stdout_lines[0]|int > 50 and disk_free_space| int < 10
 
-    - name: Reboot and retry
-      when: patching_windows_reboot and win_updates_result.msg is defined and win_updates_result.msg == "A reboot is required before more updates can be installed"
+    - debug:
+        msg: "Windows update result: {{win_updates_result}}"
 
-      block:
-        - name: Reboot windows to retry update installation
-          win_reboot:
-            reboot_timeout: "{{ patching_windows_reboot_timeout }}"
-          when: inventory_hostname in groups['reboot_server_group']
+    - name: Reboot the server if reboot is required
+      win_reboot:
+              reboot_timeout: "{{patching_windows_reboot_timeout }}"
+      when: win_updates_result.reboot_required == True or inventory_hostname in groups['reboot_server_group']
 
-        - name: Power off servers
-            win_shell: shutdown /s
-          when: inventory_hostname in groups['power_off_server_group']
+    - name: Power off servers
+      win_shell: "shutdown /s"
+      when: inventory_hostname in groups['power_off_server_group']
     
     - name: check patching log file exists
       stat:
-        path: "/ansible_dir/patching_output_files/{{date_time}}_windows_patch.txt"
+        path: "/ansible_dir/patching_output_files/{{date_time}}_windows_patch.csv"
       run_once: true
       register: patching_log
       delegate_to: localhost
 
-    - debug:
-       msg: "{{patching_log}}"
-
     - name: Create patching log file if doesn't exist
       file:
-        path: "/ansible_dir/patching_output_files/{{date_time}}_windows_patch.txt"
+        path: "/ansible_dir/patching_output_files/{{date_time}}_windows_patch.csv"
         state: touch
       become: yes
       run_once: true
       when: patching_log.stat.exists == false
       delegate_to: localhost
 
-    - name: lineinfile module
+    - name: Creating headers for patching output
       lineinfile:
-            line: "Hostname: {{inventory_hostname}} , \n **************OUTPUT ***************** \n {{ win_updates_result.stdout_lines }}"
-            dest: /ansible_dir/patching_output_files/{{date_time}}_windows_patch.txt
-            insertbefore: EOF 
+              line: "Hostname,IP Address,Reachable/Un-reachable,reboot_required,found_update_count,installed_update_count,failed_update_count,updates"
+              dest: /ansible_dir/patching_output_files/{{date_time}}_windows_patch.csv
+              insertbefore: EOF
+      run_once: true              
       delegate_to: localhost
+
+    - name: Creating patching output
+      lineinfile:
+              line: "{{host}},{{inventory_hostname}},Reachable,{{win_updates_result.reboot_required}},{{win_updates_result.found_update_count}},{{win_updates_result.installed_update_count}},{{win_updates_result.failed_update_count}},{{win_updates_result.updates}}"
+              dest: /ansible_dir/patching_output_files/{{date_time}}_windows_patch.csv
+              insertbefore: EOF
+      delegate_to: localhost
+
+
         
     
 

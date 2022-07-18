@@ -1,0 +1,12 @@
+---
+- hosts: all
+  tasks:
+  - name: Mem util
+    win_shell: $CompObject =  Get-WmiObject -Class WIN32_OperatingSystem; $RAM = (($CompObject.TotalVisibleMemorySize - $CompObject.FreePhysicalMemory)/1024/1024); $RAM
+    register: mem_util_result
+
+  - set_fact:
+          mem_util: "{{mem_util_result.stdout_lines[0] | float | round(2)  }}"
+
+  - debug:
+          msg: "mem util = {{ mem_util }} GB"

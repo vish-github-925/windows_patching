@@ -1,0 +1,7 @@
+---
+- hosts: all
+  pre_tasks:
+   - include_vars: vars.yaml
+  tasks:
+  - debug:
+      msg: "The video is: {{ video }}"

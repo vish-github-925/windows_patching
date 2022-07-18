@@ -1,0 +1,14 @@
+---
+- hosts: all
+  roles:
+     - informatiquecdc.win_pending_reboot
+  tasks:
+  - name: Check reboot required or not
+    win_pending_reboot:
+            skip_ccm_client_sdk: no
+    register: pending_reboot
+  - debug:
+       msg: "{{ pending_reboot }}"
+       #- name: reboot windows
+    #win_reboot:
+            # when: pending_reboot.reboot_required == true        

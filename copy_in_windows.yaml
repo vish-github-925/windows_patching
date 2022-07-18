@@ -1,0 +1,9 @@
+---
+- hosts: all
+  tasks:
+  - name: Copy file to windows
+    win_copy:
+            src: /ansible_dir/post_patch_output_files/2022-07-09_18H-02M-10S_post_patch.csv
+            dest: C:\Temp\
+            flat: yes
+

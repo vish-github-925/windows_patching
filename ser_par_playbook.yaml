@@ -1,0 +1,29 @@
+---
+- hosts: all
+  gather_facts: false
+  strategy: linear
+  vars:
+      _groups: "{{ groups.keys()|difference(['all', 'ungrouped']) }}"
+  #   _hosts: [0, 1, 2]  # Range of minimal common leght perhaps?
+      _groups_len_min: "{{ _groups|map('extract', groups)|map('length')|min }}"
+      _hosts: "{{ range(_groups_len_min|int) }}"
+      my_hosts: "{{ query('cartesian', _hosts, _groups) }}"
+  tasks:
+  - add_host:
+        name: "{{ groups[item.1][item.0] }}"
+        groups: my_group
+    loop: "{{ my_hosts }}"
+    run_once: true
+
+- hosts: my_group
+  gather_facts: false
+  serial: 3  # TODO: Number of the groups involved
+  order: inventory
+  tasks:
+  - name: proceed if not dummy
+    block:
+    - debug:
+       var: inventory_hostname
+    throttle: 1
+    when: inventory_hostname is not match('^dummy\d*$')
+     

@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  tasks:
+  - name: Create cron file
+    shell: touch /ansible_dir/playbooks/crontab_file.txt
+

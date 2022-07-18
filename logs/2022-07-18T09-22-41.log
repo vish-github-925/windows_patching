@@ -1,0 +1,90 @@
+2022-07-18 09:22:42,865 p=1246 u=root n=ansible | PLAY [all] *************************************************************************************************************************************************************
+2022-07-18 09:22:42,900 p=1246 u=root n=ansible | TASK [add_host] ********************************************************************************************************************************************************
+2022-07-18 09:22:43,062 p=1246 u=root n=ansible | ok: [server1] => (item=[0, 'group1'])
+2022-07-18 09:22:43,085 p=1246 u=root n=ansible | ok: [server1] => (item=[0, 'group2'])
+2022-07-18 09:22:43,100 p=1246 u=root n=ansible | ok: [server1] => (item=[0, 'group3'])
+2022-07-18 09:22:43,116 p=1246 u=root n=ansible | ok: [server1] => (item=[1, 'group1'])
+2022-07-18 09:22:43,131 p=1246 u=root n=ansible | ok: [server1] => (item=[1, 'group2'])
+2022-07-18 09:22:43,147 p=1246 u=root n=ansible | ok: [server1] => (item=[1, 'group3'])
+2022-07-18 09:22:43,162 p=1246 u=root n=ansible | ok: [server1] => (item=[2, 'group1'])
+2022-07-18 09:22:43,163 p=1246 u=root n=ansible | ok: [server1] => (item=[2, 'group2'])
+2022-07-18 09:22:43,164 p=1246 u=root n=ansible | ok: [server1] => (item=[2, 'group3'])
+2022-07-18 09:22:43,178 p=1246 u=root n=ansible | ok: [server1] => (item=[3, 'group1'])
+2022-07-18 09:22:43,194 p=1246 u=root n=ansible | ok: [server1] => (item=[3, 'group2'])
+2022-07-18 09:22:43,210 p=1246 u=root n=ansible | ok: [server1] => (item=[3, 'group3'])
+2022-07-18 09:22:43,224 p=1246 u=root n=ansible | ok: [server1] => (item=[4, 'group1'])
+2022-07-18 09:22:43,240 p=1246 u=root n=ansible | ok: [server1] => (item=[4, 'group2'])
+2022-07-18 09:22:43,256 p=1246 u=root n=ansible | ok: [server1] => (item=[4, 'group3'])
+2022-07-18 09:22:43,272 p=1246 u=root n=ansible | ok: [server1] => (item=[5, 'group1'])
+2022-07-18 09:22:43,274 p=1246 u=root n=ansible | ok: [server1] => (item=[5, 'group2'])
+2022-07-18 09:22:43,301 p=1246 u=root n=ansible | ok: [server1] => (item=[5, 'group3'])
+2022-07-18 09:22:43,338 p=1246 u=root n=ansible | PLAY [my_group] ********************************************************************************************************************************************************
+2022-07-18 09:22:43,482 p=1246 u=root n=ansible | TASK [debug] ***********************************************************************************************************************************************************
+2022-07-18 09:22:43,486 p=1246 u=root n=ansible | ok: [server1] => {
+    "inventory_hostname": "server1"
+}
+2022-07-18 09:22:43,561 p=1246 u=root n=ansible | ok: [server2] => {
+    "inventory_hostname": "server2"
+}
+2022-07-18 09:22:43,615 p=1246 u=root n=ansible | ok: [server3] => {
+    "inventory_hostname": "server3"
+}
+2022-07-18 09:22:43,650 p=1246 u=root n=ansible | PLAY [my_group] ********************************************************************************************************************************************************
+2022-07-18 09:22:43,801 p=1246 u=root n=ansible | ok: [server11] => {
+    "inventory_hostname": "server11"
+}
+2022-07-18 09:22:43,882 p=1246 u=root n=ansible | ok: [server22] => {
+    "inventory_hostname": "server22"
+}
+2022-07-18 09:22:43,924 p=1246 u=root n=ansible | ok: [server33] => {
+    "inventory_hostname": "server33"
+}
+2022-07-18 09:22:43,957 p=1246 u=root n=ansible | PLAY [my_group] ********************************************************************************************************************************************************
+2022-07-18 09:22:44,096 p=1246 u=root n=ansible | ok: [server111] => {
+    "inventory_hostname": "server111"
+}
+2022-07-18 09:22:44,171 p=1246 u=root n=ansible | ok: [server222] => {
+    "inventory_hostname": "server222"
+}
+2022-07-18 09:22:44,216 p=1246 u=root n=ansible | ok: [server333] => {
+    "inventory_hostname": "server333"
+}
+2022-07-18 09:22:44,251 p=1246 u=root n=ansible | PLAY [my_group] ********************************************************************************************************************************************************
+2022-07-18 09:22:44,442 p=1246 u=root n=ansible | ok: [server1111] => {
+    "inventory_hostname": "server1111"
+}
+2022-07-18 09:22:44,504 p=1246 u=root n=ansible | skipping: [dummy1]
+2022-07-18 09:22:44,583 p=1246 u=root n=ansible | ok: [server3333] => {
+    "inventory_hostname": "server3333"
+}
+2022-07-18 09:22:44,617 p=1246 u=root n=ansible | PLAY [my_group] ********************************************************************************************************************************************************
+2022-07-18 09:22:44,787 p=1246 u=root n=ansible | ok: [server11111] => {
+    "inventory_hostname": "server11111"
+}
+2022-07-18 09:22:44,835 p=1246 u=root n=ansible | skipping: [dummy2]
+2022-07-18 09:22:44,865 p=1246 u=root n=ansible | skipping: [dummy4]
+2022-07-18 09:22:44,909 p=1246 u=root n=ansible | PLAY [my_group] ********************************************************************************************************************************************************
+2022-07-18 09:22:45,045 p=1246 u=root n=ansible | ok: [server111111] => {
+    "inventory_hostname": "server111111"
+}
+2022-07-18 09:22:45,097 p=1246 u=root n=ansible | skipping: [dummy3]
+2022-07-18 09:22:45,123 p=1246 u=root n=ansible | skipping: [dummy5]
+2022-07-18 09:22:45,169 p=1246 u=root n=ansible | PLAY RECAP *************************************************************************************************************************************************************
+2022-07-18 09:22:45,171 p=1246 u=root n=ansible | dummy1                     : ok=0    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+2022-07-18 09:22:45,172 p=1246 u=root n=ansible | dummy2                     : ok=0    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+2022-07-18 09:22:45,173 p=1246 u=root n=ansible | dummy3                     : ok=0    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+2022-07-18 09:22:45,173 p=1246 u=root n=ansible | dummy4                     : ok=0    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+2022-07-18 09:22:45,174 p=1246 u=root n=ansible | dummy5                     : ok=0    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+2022-07-18 09:22:45,175 p=1246 u=root n=ansible | server1                    : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2022-07-18 09:22:45,176 p=1246 u=root n=ansible | server11                   : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2022-07-18 09:22:45,177 p=1246 u=root n=ansible | server111                  : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2022-07-18 09:22:45,178 p=1246 u=root n=ansible | server1111                 : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2022-07-18 09:22:45,179 p=1246 u=root n=ansible | server11111                : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2022-07-18 09:22:45,180 p=1246 u=root n=ansible | server111111               : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2022-07-18 09:22:45,181 p=1246 u=root n=ansible | server2                    : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2022-07-18 09:22:45,181 p=1246 u=root n=ansible | server22                   : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2022-07-18 09:22:45,182 p=1246 u=root n=ansible | server222                  : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2022-07-18 09:22:45,183 p=1246 u=root n=ansible | server3                    : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2022-07-18 09:22:45,184 p=1246 u=root n=ansible | server33                   : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2022-07-18 09:22:45,185 p=1246 u=root n=ansible | server333                  : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2022-07-18 09:22:45,185 p=1246 u=root n=ansible | server3333                 : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   

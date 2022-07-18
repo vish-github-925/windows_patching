@@ -1,0 +1,12 @@
+---
+- hosts: all
+  tasks:
+  - win_updates:
+          category_names:
+                  - "SecurityUpdates"
+          state: searched
+    register: win_updates_result
+  - set_fact:
+          filtered_updates: "{{ win_updates_result.filtered_updates }}"
+  - debug:
+          msg: "filtered updates: {{ filtered_updates | string | regex_replace(',', ' | ') }}" 

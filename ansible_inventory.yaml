@@ -1,14 +1,11 @@
 ---
-- hosts: all
+- hosts: localhost
   tasks:
     - name: Execute the python script to prepare inventory file from excel sheets.
-      win_command: python C:\Users\user\Desktop\oneNeuron\python_lecture\python_excel_test\github_windows_patching_scripts\get_inventory_refactored.py {{day}}
-
-    - name:
-      fetch:
-        src: C:\Users\user\Desktop\oneNeuron\python_lecture\python_excel_test\github_windows_patching_scripts\{{day}}_inventory.ini
-        dest: /ansible_dir/inventory/
-        flat: yes
+      shell: python3.8 /ansible_dir/playbooks/get_inventory_refactored.py {{day}}
+      register: xl_op
+    - debug:
+            msg: "{{xl_op}}"
 
   # The above playbook is executed
   # a) In the terminal by ansible-playbook ansible_inventory.yaml -e "day_of_patching='Day1'"

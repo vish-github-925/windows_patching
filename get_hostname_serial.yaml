@@ -1,0 +1,8 @@
+---
+- hosts: all
+  ignore_unreachable: yes
+  gather_facts: false
+  tasks:
+  - debug:
+       msg: "{{inventory_hostname}}"
+       #when: inventory_hostname not in groups['reboot']

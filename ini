@@ -1,0 +1,9 @@
+[reboot]
+server2
+[critical]
+server1
+server2
+[non-critical]
+server3
+server4
+

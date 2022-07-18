@@ -1,9 +1,14 @@
 ---
 - name: Master Patching Activities
-  hosts: windows
+  hosts: all
   gather_facts: true
   ignore_errors: true
-
+  
+  vars:
+    patching_windows_reboot_timeout: 3600
+    patching_windows_categories:
+       - "SecurityUpdates"
+  
   pre_tasks:
     - set_fact:
         date_time: "{{'%Y-%m-%d_%HH-%MM-%SS' | strftime }}"
@@ -25,6 +30,34 @@
     - include_tasks: windows_patching.yaml
 
   post_tasks:
+  - name: check patching log file exists
+    stat:
+      path: "/ansible_dir/patching_output_files/{{date_time}}_windows_patch.csv"
+    run_once: true
+    register: patch_log  
+    delegate_to: localhost 
+
+  - name: Create patching log file if doesn't exist 
+    file:
+        path: "/ansible_dir/patching_output_files/{{date_time}}_windows_patch.csv"
+        state: touch
+    become: yes
+    run_once: true
+    when: patch_log.stat.exists == false
+    delegate_to: localhost
+
+  - set_fact:
+       unreachable_hosts: "{{ansible_play_hosts_all | difference(ansible_play_hosts) }}"
+    run_once: true 
+
+  - name: lineinfile module
+    lineinfile: 
+      line: "-,{{item}},Un-reachable,-,-,-,-,-,-"
+      dest: /ansible_dir/patching_output_files/{{date_time}}_windows_patch.csv
+      insertbefore: EOF
+    loop: "{{ unreachable_hosts }}" 
+    run_once: true
+    delegate_to: localhost    
   # - name: Send patching report to team
   #   mail:
   #     host: localhost

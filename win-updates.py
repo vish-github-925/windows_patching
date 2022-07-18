@@ -27,3 +27,4 @@ for i in range(len(dict_objects)):
         continue
 
 print(updates_available)
+print(len(updates_available))

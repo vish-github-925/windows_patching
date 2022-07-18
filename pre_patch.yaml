@@ -1,4 +1,16 @@
 ---
+  - set_fact:
+          start_time: "{{ ansible_date_time.iso8601[:19] }}"
+  - name: Get the hostname
+    win_shell: hostname
+    register: hostname_result
+
+  - set_fact: 
+      host: "{{ hostname_result.stdout_lines[0] }}"
+
+  - debug:
+          msg: "The hostname of {{inventory_hostname}} is: {{ host }}" 
+
   - name: Check CPU utilization
     win_shell: wmic cpu get loadpercentage | Select -Last 4 # The output will be a number. Example: 16
     register: cpu_utilization
@@ -7,9 +19,35 @@
     win_shell: Get-WmiObject Win32_LogicalDisk -Filter "DeviceID='C:'" | Select -ExpandProperty Freespace
     register: disk_space #The output will be a large number. Example 60388986880
 
-  - name: List of running services
-    win_shell: Get-Process | select-object ProcessName #The output will be a list of processess running
+  - name: List of running processes
+    win_shell: Get-Process | foreach {$_.ProcessName} #The output will be a list of processess running
     register: process
+
+  - name: List of services running
+    win_shell: Get-Service | Where-Object {$_.Status -eq "Running"} | foreach {$_.DisplayName}
+    register: services
+  
+  - set_fact:
+      services_list: "{{services.stdout_lines | map('trim') | list | unique }}"
+
+  - set_fact:
+      services_str: "{{ services_list | join(' | ') | string}}" 
+
+  - set_fact:
+          services_list_count: "{{services_list | count }}"
+ 
+  - name: Create a file to store services output
+    file:
+       path: /ansible_dir/services_output/{{inventory_hostname}}_services_pre_patch.txt
+       state: touch
+    delegate_to: localhost
+
+  - name: Store services output in services_output folder
+    shell: echo "{{services_list}}" > /ansible_dir/services_output/{{inventory_hostname}}_services_pre_patch.txt
+    delegate_to: localhost
+
+  - debug:
+      msg: "The services are: {{services_list }} and the count of services is: {{services_list_count}}"
 
   - set_fact:
      process_list_count: "{{process.stdout_lines | map('trim') | list | unique | count}}"
@@ -42,21 +80,19 @@
     shell: python3.8 /ansible_dir/playbooks/win-updates.py /ansible_dir/win_updates_files/{{date_time}}/{{inventory_hostname}}_{{date_time}}_win_updates_list_output.txt
     register: available_patches
     delegate_to: localhost
-  - debug:
-          msg: "The available patches are: {{available_patches}}"
 
   - set_fact:
-      available_patches_count: "{{available_patches.stdout_lines | list |  count }}"
+      available_patches_count: "{{available_patches.stdout_lines[1]}}"
 
   - set_fact:
-      available_patches_list: "{{available_patches.stdout_lines | list}}"
+      available_patches_list: "{{available_patches.stdout_lines[0]}}"
 
   - debug:
       msg: "{{available_patches.stdout_lines}}"
 
   - name: check pre-patch log file exists
     stat:
-     path: "/ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.txt"
+     path: "/ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.csv"
     run_once: true
     register: pre_patch_log
     delegate_to: localhost
@@ -66,16 +102,28 @@
 
   - name: Create pre-patch log file if doesn't exist
     file:
-     path: "/ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.txt"
+     path: "/ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.csv"
      state: touch
     become: yes
     run_once: true
     when: pre_patch_log.stat.exists == false
     delegate_to: localhost
+  
+  - name: Adding headers to the prepatch output csv file
+    lineinfile:
+            line: "Hostname,IP Address,Reachable/Un-reachable,CPU Utilization,Free disk space,Count of Processes,Count of available_patches,List of available patches,List of services,Run time"
+            dest: /ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.csv
+            insertbefore: EOF
+    run_once: true
+    delegate_to: localhost
+  - setup:
+          filter: "ansible_date_time"
+  - set_fact:
+          run_time: "{{ ((ansible_date_time.iso8601[:19] | to_datetime('%Y-%m-%dT%H:%M:%S')) - (start_time | to_datetime('%Y-%m-%dT%H:%M:%S'))) }}"
 
   - name: lineinfile module
     lineinfile:
-            line: "Hostname: {{inventory_hostname}},CPU Utilization: {{cpu_utilization.stdout_lines[0] | int }}% ,Disk free space: {{disk_free_space}}, Count of  processess: {{process_list_count }}, Number of patches available: {{available_patches_count}}, List of available patches: {{available_patches_list}}"
-            dest: /ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.txt
+            line: "{{host}},{{inventory_hostname}},Reachable,{{cpu_utilization.stdout_lines[1] | int }}%,{{disk_free_space }},{{process_list_count }},{{available_patches_count}},{{available_patches_list}},{{services_str }},{{run_time}}"
+            dest: /ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.csv
             insertbefore: EOF 
     delegate_to: localhost

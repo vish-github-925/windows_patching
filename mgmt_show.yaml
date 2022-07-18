@@ -1,0 +1,7 @@
+---
+- hosts: all
+  tasks:
+  - name: show-tasks
+    check_point.mgmt.cp_mgmt_show_tasks:
+     from_date: '2018-05-23T08:00:00'
+     status: successful

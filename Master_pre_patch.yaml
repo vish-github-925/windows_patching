@@ -16,7 +16,6 @@
         state: directory
       run_once: true
       delegate_to: localhost
-
   # - name: Send pre-patch starting mail to team
   #   mail:
   #    host: localhost
@@ -34,25 +33,31 @@
   post_tasks:
   - name: check pre-patch log file exists
     stat:
-      path: "/ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.txt"
-      run_once: true
+      path: "/ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.csv"
+    run_once: true
     register: pre_patch_log
     delegate_to: localhost 
 
   - name: Create pre-patch log file if doesn't exist
     file:
-           path: "/ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.txt"
+           path: "/ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.csv"
            state: touch
     become: yes
     run_once: true  
     when: pre_patch_log.stat.exists == false
     delegate_to: localhost
+  
+  - set_fact:
+      unreachable_hosts: "{{ansible_play_hosts_all | difference(ansible_play_hosts) }}"
+    run_once: true
 
   - name: lineinfile module 
     lineinfile:  
-     line: "Unreachable hosts: {{ansible_play_hosts_all | difference(ansible_play_hosts) }}"
-     dest: /ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.txt 
+     line: "{{item}},Un-reachable,-,-,-,-,-,-"
+     dest: /ansible_dir/pre_patch_output_files/{{date_time}}_pre_patch.csv
      insertbefore: EOF
+    loop: "{{ unreachable_hosts }}"
+    run_once: true
     delegate_to: localhost     
   # - name: Send pre-patch report to team
   #   mail:
